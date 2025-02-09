@@ -3,7 +3,7 @@
 
 **概要:**
 
-mlx_lmにおけるKVキャッシュ量子化の実装について
+[mlx_lm](https://github.com/ml-explore/mlx-examples/tree/main/llms/mlx_lm)におけるKVキャッシュ量子化の実装について
 
 
 ## 1. `generate_step` 関数とKVキャッシュ関連の引数
