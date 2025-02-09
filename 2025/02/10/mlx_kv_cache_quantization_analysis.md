@@ -8,7 +8,7 @@ mlx_lmにおけるKVキャッシュ量子化の実装について
 
 ## 1. `generate_step` 関数とKVキャッシュ関連の引数
 
-`generate_step` 関数は、MLXフレームワークでテキスト生成を行う際の主要な関数であり、以下のKVキャッシュに関連する引数を受け取る。これらの引数は、KVキャッシュの量子化を制御するために使用される。
+[mlx_lm.utils.generate_step](https://github.com/ml-explore/mlx-examples/blob/1ced1b00ca9c2457fcbf0e54ffcffe58f53fb4fd/llms/mlx_lm/utils.py#L209) 関数は、MLXフレームワークでテキスト生成を行う際の主要な関数であり、以下のKVキャッシュに関連する引数を受け取る。これらの引数は、KVキャッシュの量子化を制御するために使用される。
 
 *   **`prompt_cache`**: 量子化の対象となるKVキャッシュ
     *   簡単に型を表すなら `prompt_cache: list[KVCache | QuantizedKVCache]`
@@ -23,7 +23,7 @@ mlx_lmにおけるKVキャッシュ量子化の実装について
 
 ## 2. `maybe_quantize_kv_cache` 関数について
 
-`maybe_quantize_kv_cache` 関数は、`generate_step` 関数から呼び出され、与えられた条件に基づいてKVキャッシュ (`prompt_cache`) を量子化する役割を担っている。この関数は、`mlx_lm.utils.py`に記載されている。
+[maybe_quantize_kv_cache](https://github.com/ml-explore/mlx-examples/blob/1ced1b00ca9c2457fcbf0e54ffcffe58f53fb4fd/llms/mlx_lm/utils.py#L196) 関数は、`generate_step` 関数から呼び出され、与えられた条件に基づいてKVキャッシュ (`prompt_cache`) を量子化する役割を担っている。この関数は、`mlx_lm.utils.py`に記載されている。
 
 ```python
 def maybe_quantize_kv_cache(prompt_cache, quantized_kv_start, kv_group_size, kv_bits):
@@ -48,7 +48,7 @@ def maybe_quantize_kv_cache(prompt_cache, quantized_kv_start, kv_group_size, kv_
 
 ## 3. 関連クラス
 
-KV Cacheは、量子化と未量子化でクラスが分かれている。以下のクラスは、`mlx_lm.models.cache.py` に定義されている。
+KV Cacheは、量子化と未量子化でクラスが分かれている。以下のクラスは、[mlx_lm.models.cache.py](https://github.com/ml-explore/mlx-examples/blob/main/llms/mlx_lm/models/cache.py) に定義されている。
 
 *   **`KVCache`:** 量子化されていない（元の精度、例えば FP16 の）KVキャッシュを格納するクラス。
 *   **`QuantizedKVCache`:** 量子化されたKVキャッシュを格納するクラス。
