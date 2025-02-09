@@ -54,5 +54,17 @@ KV Cacheは、量子化と未量子化でクラスが分かれている。以下
 *   **`QuantizedKVCache`:** 量子化されたKVキャッシュを格納するクラス。
 
 *   どちらにも `offset` 属性があり、ここに保持している有効なトークン数が記録されている。
-*   KVCacheクラスには `to_quantized`というメソッドがある。
-    *   KVCacheオブジェクトを指定されたグループサイズとビット数で量子化された QuantizedKVCache オブジェクトに変換するメソッド。
+*   KVCacheクラスには [to_quantized](https://github.com/ml-explore/mlx-examples/blob/1ced1b00ca9c2457fcbf0e54ffcffe58f53fb4fd/llms/mlx_lm/models/cache.py#L268)というメソッドがある。
+    *   KVCacheオブジェクトを QuantizedKVCache オブジェクトに変換するメソッド。引数でグループサイズとビット数を指定して量子化する。
+
+```python
+    def to_quantized(self, group_size: int = 64, bits: int = 4) -> QuantizedKVCache:
+        quant_cache = QuantizedKVCache(group_size=group_size, bits=bits)
+        quant_cache.offset = self.offset
+        if self.keys is not None:
+            quant_cache.keys = mx.quantize(self.keys, group_size=group_size, bits=bits)
+            quant_cache.values = mx.quantize(
+                self.values, group_size=group_size, bits=bits
+            )
+        return quant_cache
+```
