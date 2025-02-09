@@ -14,16 +14,16 @@ mlx_lmにおけるKVキャッシュ量子化の実装について
     *   簡単に型を表すなら `prompt_cache: list[KVCache | QuantizedKVCache]`
     *   そもそも、KVキャッシュは、LLMの各レイヤーにおけるAttentionメカニズムで計算されたKey (K) と Value (V) のテンソルを格納しすることで、計算を効率化するもの。
     *   prompt_cacheにはモデルの各レイヤーごとのKV Cacheがリストで保存される or されている（先頭のレイヤーのキャッシュはpropt_cache[0]）。
-    *   リスト内の各要素は `KVCache` または `QuantizedKVCache` オブジェクト（後述）。
-*   **`kv_bits`**: KVキャッシュを量子化する際のビット数。
-*   **`kv_group_size`**: KVキャッシュの量子化におけるグループサイズを指定するパラメータであり、量子化の精度、メモリ使用量、および計算量に影響を与える。
+    *   リスト内の各要素は `KVCache` または `QuantizedKVCache` オブジェクト
+*   **`kv_bits`**: KVキャッシュを量子化する際のビット数
+*   **`kv_group_size`**: KVキャッシュの量子化におけるグループサイズを指定する
     *   kv_group_size の単位で量子化が行われる。小さいと精度が高くなり、一方でキャッシュ生成時のメモリ使用量と計算量が増加する。大きい場合はその逆。デフォルトは64
-*   **`quantized_kv_start`**: KVキャッシュを量子化するかを指定するステップ数（トークン数）。
-    *   トークン数が `quantized_kv_start` 個以下の場合、KVキャッシュは量子化されない。`maybe_quantize_kv_cache` の処理を参照。
+*   **`quantized_kv_start`**: KVキャッシュを量子化するかを指定するステップ数
+    *   ステップ数(トークン数)が `quantized_kv_start` 以下の場合、KVキャッシュは量子化されない。`maybe_quantize_kv_cache` の処理を参照。
 
 ## 2. `maybe_quantize_kv_cache` 関数について
 
-[maybe_quantize_kv_cache](https://github.com/ml-explore/mlx-examples/blob/1ced1b00ca9c2457fcbf0e54ffcffe58f53fb4fd/llms/mlx_lm/utils.py#L196) 関数は、`generate_step` 関数から呼び出され、与えられた条件に基づいてKVキャッシュ (`prompt_cache`) を量子化する役割を担っている。この関数は、`mlx_lm.utils.py`に記載されている。
+[maybe_quantize_kv_cache](https://github.com/ml-explore/mlx-examples/blob/1ced1b00ca9c2457fcbf0e54ffcffe58f53fb4fd/llms/mlx_lm/utils.py#L196) 関数は、`generate_step` 関数から呼び出され、与えられた条件に基づいてKVキャッシュ (prompt_cache) を量子化する役割を担っている。
 
 ```python
 def maybe_quantize_kv_cache(prompt_cache, quantized_kv_start, kv_group_size, kv_bits):
